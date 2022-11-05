@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# pyenv
+.python-version
+
+# JSON file (twitter cookie)
+cookie.json

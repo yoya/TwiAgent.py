@@ -9,7 +9,10 @@ Twitter Bookmark Downloader powered by Python Selenium
 
 # setup
 
+## cookie.json
+
+## pip install
+
 ```
 % pip install -r requirements.txt
 ```
- 
