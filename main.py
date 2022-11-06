@@ -11,8 +11,8 @@ BOOKMARK_URL = "https://twitter.com/i/bookmarks"
 dl = TwiBookmaDL()
 try:
     dl.openBrowser(BOOKMARK_URL, cookieFile)
+    articles = dl.readBookmarkArticles()
 except Exception as e:
     print(e)
     exit (1)
-    
-time.sleep(5)
+
