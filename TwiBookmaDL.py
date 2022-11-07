@@ -19,6 +19,9 @@ class TwiBookmaDL:
         try:
             cookies = json.load(json_open)
             options = Options()
+            #options.add_argument('--headless')
+            prefs = {"intl.accept_languages": "en-us"}
+            options.add_experimental_option("prefs",prefs)
             self.driver = webdriver.Chrome(options=options)
             self.driver.get(url)
             for cookie in cookies:
@@ -28,7 +31,7 @@ class TwiBookmaDL:
             mesg = "Invalid Cookie JSON file({}) => {}".format(cookieFile, e)
             raise Exception(mesg)
     # ブックマーク一覧を取得する
-    def readBookmarkArticles(self):
+    def readBookmarkArticleList(self):
         locator = (By.CSS_SELECTOR, 'article')
         wait = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(locator)
@@ -39,27 +42,28 @@ class TwiBookmaDL:
         return articles
     # ブックマーク情報の１つから文字と画像を収集する
     def readBookmarkArticle(self, article):
-        texts = article.find_elements(By.CSS_SELECTOR, 'div[data-testid="tweetText"]')
-        text = texts[0]
-        photos = article.find_elements(By.CSS_SELECTOR, 'div[data-testid="tweetPhoto"]')
-        photo = photos[0]
-        imgs = photo.find_elements(By.CSS_SELECTOR, 'img')
+        user = article.find_element(By.CSS_SELECTOR, 'div[data-testid="User-Names"]')
+        a = user.find_element(By.CSS_SELECTOR, 'a[href*="/status/"]')
+        href = a.get_attribute("href")
+        text = article.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetText"]')
         imgsrcs = []
-        for img in imgs:
-            print("img", img, img.get_attribute('innerHTML'))
-            src = img.get_attribute("src")
-            imgsrcs.append(src)
-        return text.text, imgsrcs
+        photos = article.find_elements(By.CSS_SELECTOR, 'div[data-testid="tweetPhoto"]')
+        for photo in photos:
+            imgs = photo.find_elements(By.CSS_SELECTOR, 'img')
+            print("imgs len:{}".format(len(imgs)))
+            for img in imgs:
+#            print("img", img, img.get_attribute('outerHTML'))
+                src = img.get_attribute("src")
+                imgsrcs.append(src)
+        return href, text.text, imgsrcs
+    #
+    def downloadPhotoImage(self, imgsrcs):
+        pass
     # 共有ボタンをクリックして、ポップアップめんニューを出す
     def clickBookmarkShareButton(self, article):
-        print("clickBookmarkShareButton", article)
-        svg = article.find_elements(By.CSS_SELECTOR, 'svg')
-        print(svg)
-#        locator = (By.CSS_SELECTOR, 'div[aria-label="Share Tweet"]')
+        print("clickBookmarkShareButton", article.get_attribute('outerHTML'))
+        locator = (By.CSS_SELECTOR, 'div[aria-label="Share Tweet"]')
 #        menus = article.find_elements(*locator)
-        menus = article.find_elements(By.CSS_SELECTOR, 'div[aria-label="Share Tweet"]')
-        menusLen = len(menus)
-        if menusLen != 1:
-            print("menus count:{}".format(menusLen))
-            raise Exception("article has no menus")
-        self.driver.execute_script('arguments[0].click();', menus[0])
+        menu = article.find_element(*locator)
+        print(menu)
+        self.driver.execute_script('arguments[0].click();', menu)
