@@ -27,15 +27,16 @@ logf = open("tweet.txt", 'a')
 def main(dl, retry):
     articles = dl.readBookmarkArticleList()
     articlesLen = len(articles)
-    print("articles count:{}".format(articlesLen))
+#    print("articles count:{}".format(articlesLen))
     if (articlesLen < 1):
         dl.loadArticle()
         return retryCount + 1
     for article in articles:
         url, text, imgsrcs = dl.readBookmarkArticle(article)
+        print(url, imgsrcs)
         logf.write("========\n{}\n{}\n{}\n\n".format(url, text, imgsrcs))
         imgsrcsLen = len(imgsrcs)
-        print("    imgsrcs count:{}".format(imgsrcsLen))
+#        print("    imgsrcs count:{}".format(imgsrcsLen))
         for src in imgsrcs:
             imgurl, imgfile = url_to_origurl_filename(src)
             img = dl.downloadPhotoImage(imgurl)
@@ -52,8 +53,9 @@ retry = 0
 while (retry < 3):  # 仏の顔も三度まで
     try:
         retry = main(dl, retry)
+        time.sleep(5)
     except Exception as e:
         print(e, file=sys.stderr)
         dl.refresh()
-        time.sleep(5)
+        time.sleep(10)
         retry = retry + 1
