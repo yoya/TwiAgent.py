@@ -4,7 +4,7 @@ Twitter Bookmark Downloader powered by Python Selenium
 
 # require
 
-- Apple macOS Monterey 移行
+- Apple macOS Monterey 以降
 
 - Google Chrome 最近のバージョン
 
