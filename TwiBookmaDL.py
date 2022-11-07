@@ -9,6 +9,8 @@ from selenium.webdriver.common.by import By
 # wait for page load
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException
 import requests
 
 class TwiBookmaDL:
@@ -46,15 +48,22 @@ class TwiBookmaDL:
         user = article.find_element(By.CSS_SELECTOR, 'div[data-testid="User-Names"]')
         a = user.find_element(By.CSS_SELECTOR, 'a[href*="/status/"]')
         href = a.get_attribute("href")
-        text = article.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetText"]')
+        try:
+            textElem = article.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetText"]')
+            text = textElem.text
+        except NoSuchElementException:
+            text = ""
         imgsrcs = []
-        photos = article.find_elements(By.CSS_SELECTOR, 'div[data-testid="tweetPhoto"]')
+        try:
+            photos = article.find_elements(By.CSS_SELECTOR, 'div[data-testid="tweetPhoto"]')
+        except NoSuchElementException:
+            photos = []
         for photo in photos:
             imgs = photo.find_elements(By.CSS_SELECTOR, 'img')
             for img in imgs:
                 src = img.get_attribute("src")
                 imgsrcs.append(src)
-        return href, text.text, imgsrcs
+        return href, text, imgsrcs
     #
     # 画像のダウンロードストリームを取得する
     #
@@ -65,10 +74,25 @@ class TwiBookmaDL:
             return r.raw  # filestream
         raise Exception("Can't get image:{}".format(src))
     #
-    # 共有ボタンをクリックして、ポップアップめんニューを出す
+    # 共有メニューのブックマーク削除メニューを選択する
     #
-    def clickBookmarkShareButton(self, article):
-        print("clickBookmarkShareButton", article.get_attribute('outerHTML'))
+    def removeBookmarkArticle(self, article):
         locator = (By.CSS_SELECTOR, 'div[aria-label="Share Tweet"]')
         menu = article.find_element(*locator)
         self.driver.execute_script('arguments[0].click();', menu)
+        locator = (By.XPATH, '//span[contains(text(),"Remove Tweet from Bookmarks")]')
+        wait = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(locator)
+        )
+        remove = menu.find_element(*locator)
+        self.driver.execute_script('arguments[0].click();', remove)
+    def loadArticle(self):
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight+1)")
+        locator = (By.CSS_SELECTOR, 'article')
+        wait = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(locator)
+        )
+    #
+    # 画面リフレッシュ
+    def refresh(self):
+        self.driver.refresh()

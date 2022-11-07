@@ -23,30 +23,37 @@ def url_to_origurl_filename(src):
 os.makedirs("media", exist_ok=True)
 logf = open("tweet.txt", 'a')
 
+
+def main(dl, retry):
+    articles = dl.readBookmarkArticleList()
+    articlesLen = len(articles)
+    print("articles count:{}".format(articlesLen))
+    if (articlesLen < 1):
+        dl.loadArticle()
+        return retryCount + 1
+    for article in articles:
+        url, text, imgsrcs = dl.readBookmarkArticle(article)
+        logf.write("========\n{}\n{}\n{}\n\n".format(url, text, imgsrcs))
+        imgsrcsLen = len(imgsrcs)
+        print("    imgsrcs count:{}".format(imgsrcsLen))
+        for src in imgsrcs:
+            imgurl, imgfile = url_to_origurl_filename(src)
+            img = dl.downloadPhotoImage(imgurl)
+            with open("media/{}".format(imgfile),'wb') as f:
+                shutil.copyfileobj(img, f)
+            dl.removeBookmarkArticle(article)
+            time.sleep(3)
+    return 0
+
 dl = TwiBookmaDL()
-try:
-    dl.openBrowser(BOOKMARK_URL, cookieFile)
-    while (True):
-        articles = dl.readBookmarkArticleList()
-        articlesLen = len(articles)
-        print("articles count:{}".format(articlesLen))
-        if (articlesLen < 1):
-            time.sleep(10)
-            continue
-        for article in articles:
-            url, text, imgsrcs = dl.readBookmarkArticle(article)
-            logf.write("========\n{}\n{}\n{}".format(url, text, imgsrcs))
-            for src in imgsrcs:
-                imgurl, imgfile = url_to_origurl_filename(src)
-                print(imgurl, imgfile)
-                img = dl.downloadPhotoImage(imgurl)
-                with open("media/{}".format(imgfile),'wb') as f:
-                    shutil.copyfileobj(img, f)
-            #dl.clickBookmarkShareButton(article)
-            time.sleep(10)
-            break
-        break
-        
-except Exception as e:
-    print(e, file=sys.stderr)
-    exit (1)
+dl.openBrowser(BOOKMARK_URL, cookieFile)
+
+retry = 0
+while (retry < 3):  # 仏の顔も三度まで
+    try:
+        retry = main(dl, retry)
+    except Exception as e:
+        print(e, file=sys.stderr)
+        dl.refresh()
+        time.sleep(5)
+        retry = retry + 1
