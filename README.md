@@ -55,4 +55,4 @@ Twitter Bookmark Downloader powered by Python Selenium
 (img src)
 ```
 
-- media/*.(jpeg|png)
+- media/*.(jpg|png)
