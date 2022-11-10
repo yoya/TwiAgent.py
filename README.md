@@ -49,10 +49,10 @@ Twitter Bookmark Downloader powered by Python Selenium
 
 - tweet.txt
 ```
-====
+========
 (URL)
 (tweet text)
-(img src)
+(img src list)
 ```
 
 - media/*.(jpg|png)
