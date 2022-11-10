@@ -11,10 +11,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import NoSuchWindowException, TimeoutException
 import requests
 
 class TwiBookmaDL:
     def __init__(self):
+        self.AbortExceptions = (NoSuchElementException)
+        self.RetryException  = (StaleElementReferenceException)
+        self.FinishExceptions = (NoSuchWindowException, TimeoutException)
         pass
     # ブラウザを開く
     def openBrowser(self, url, cookieFile):
@@ -23,7 +27,7 @@ class TwiBookmaDL:
             cookies = json.load(json_open)
             options = Options()
             #options.add_argument('--headless')
-            prefs = {"intl.accept_languages": "en-us"}
+            prefs = {"intl.accept_languages": "en-us"}  # 英語言語設定
             options.add_experimental_option("prefs",prefs)
             self.driver = webdriver.Chrome(options=options)
             self.driver.get(url)

@@ -23,14 +23,13 @@ def url_to_origurl_filename(src):
 os.makedirs("media", exist_ok=True)
 logf = open("tweet.txt", 'a')
 
-
 def main(dl, retry):
     articles = dl.readBookmarkArticleList()
     articlesLen = len(articles)
 #    print("articles count:{}".format(articlesLen))
     if (articlesLen < 1):
         dl.loadArticle()
-        return retryCount + 1
+        return False  # soft error
     for article in articles:
         url, text, imgsrcs = dl.readBookmarkArticle(article)
         print(url, imgsrcs)
@@ -44,7 +43,7 @@ def main(dl, retry):
                 shutil.copyfileobj(img, f)
             dl.removeBookmarkArticle(article)
             time.sleep(3)
-    return 0
+    return True
 
 dl = TwiBookmaDL()
 dl.openBrowser(BOOKMARK_URL, cookieFile)
@@ -52,10 +51,25 @@ dl.openBrowser(BOOKMARK_URL, cookieFile)
 retry = 0
 while (retry < 3):  # 仏の顔も三度まで
     try:
-        retry = main(dl, retry)
-        time.sleep(5)
-    except Exception as e:
-        print(e, file=sys.stderr)
+        if main(dl, retry) == True:
+            retry = 0
+            time.sleep(3)
+        else:
+            retry = retry + 1
+            time.sleep(5)
+    except (dl.RetryException) as e:
         dl.refresh()
         time.sleep(10)
-        retry = retry + 1
+        retry = retry + 1  # soft error
+        continue
+    except (dl.FinishExceptions) as e:
+        print("OK")
+        break
+    except Exception as e:
+        print(sys.exception_info())
+        print(e, file=sys.stderr)
+        break
+    except (dl.AbortExceptions) as e:
+        print(sys.exception_info())
+        print(e, file=sys.stderr)
+        break
