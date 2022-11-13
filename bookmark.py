@@ -1,10 +1,10 @@
 # (c) 2022/05/22 yoya@awn.jp
 
 import os, sys, time
-from TwiBookmaDL import TwiBookmaDL
 import json
 from urllib import parse
 import shutil
+from TwiAgentBookmark import TwiAgentBookmark
 
 prog, cookieFile = sys.argv;
 
@@ -23,53 +23,53 @@ def url_to_origurl_filename(src):
 os.makedirs("media", exist_ok=True)
 logf = open("tweet.txt", 'a')
 
-def main(dl, retry):
-    articles = dl.readBookmarkArticleList()
+def main(agent, retry):
+    articles = agent.readBookmarkArticleList()
     articlesLen = len(articles)
 #    print("articles count:{}".format(articlesLen))
     if (articlesLen < 1):
-        dl.loadArticle()
+        agent.loadArticle()
         return False  # soft error
     for article in articles:
-        url, text, imgsrcs = dl.readBookmarkArticle(article)
+        url, text, imgsrcs = agent.readBookmarkArticle(article)
         print(url, imgsrcs)
         logf.write("========\n{}\n{}\n{}\n\n".format(url, text, imgsrcs))
         imgsrcsLen = len(imgsrcs)
 #        print("    imgsrcs count:{}".format(imgsrcsLen))
         for src in imgsrcs:
             imgurl, imgfile = url_to_origurl_filename(src)
-            img = dl.downloadPhotoImage(imgurl)
+            img = agent.downloadPhotoImage(imgurl)
             with open("media/{}".format(imgfile),'wb') as f:
                 shutil.copyfileobj(img, f)
-            dl.removeBookmarkArticle(article)
+            agent.removeBookmarkArticle(article)
             time.sleep(3)
     return True
 
-dl = TwiBookmaDL()
-dl.openBrowser(BOOKMARK_URL, cookieFile)
+agent = TwiAgentBookmark()
+agent.openBookmark(cookieFile)
 
 retry = 0
 while (retry < 3):  # 仏の顔も三度まで
     try:
-        if main(dl, retry) == True:
+        if main(agent, retry) == True:
             retry = 0
             time.sleep(3)
         else:
             retry = retry + 1
             time.sleep(5)
-    except (dl.RetryException) as e:
-        dl.refresh()
+    except (agent.RetryException) as e:
+        agent.refresh()
         time.sleep(10)
         retry = retry + 1  # soft error
         continue
-    except (dl.FinishExceptions) as e:
+    except (agent.FinishExceptions) as e:
         print("OK")
         break
     except Exception as e:
         print(sys.exception_info())
         print(e, file=sys.stderr)
         break
-    except (dl.AbortExceptions) as e:
+    except (agent.AbortExceptions) as e:
         print(sys.exception_info())
         print(e, file=sys.stderr)
         break
