@@ -1,6 +1,9 @@
-# TwiBookmaDL.py
+# TwiAgent.py
 
-Twitter Bookmark Downloader powered by Python Selenium
+Twitter Agent powered by Python Selenium
+
+- Bookmark Download
+- Setting Interests
 
 # require
 
@@ -37,8 +40,10 @@ Twitter Bookmark Downloader powered by Python Selenium
       - cookie export (タブの右から３番目) をクリックします。
    - cookie.json を作って clipboard 内のテキストを保存します。
 
+# Book Download
+
 ```
-% python main.py cookie.json
+% python bookmark.py cookie.json
 ```
 
 # input
