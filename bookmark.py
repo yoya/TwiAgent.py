@@ -63,6 +63,8 @@ while (retry < 3):  # 仏の顔も三度まで
         retry = retry + 1  # soft error
         continue
     except (agent.FinishExceptions) as e:
+        print(sys.exception_info())
+        print(e, file=sys.stderr)
         print("OK")
         break
     except Exception as e:

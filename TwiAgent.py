@@ -40,6 +40,8 @@ class TwiAgent:
     # 画面リフレッシュ
     def refresh(self):
         self.driver.refresh()
+    def click(self, element):
+        self.driver.execute_script('arguments[0].click();', element)
     #
     # 画像のダウンロードストリームを取得する
     #
@@ -49,15 +51,24 @@ class TwiAgent:
             r.raw.decode_content = True  #  mime encode は解く
             return r.raw  # filestream
         raise Exception("Can't get image:{}".format(src))
-    def readByCSSSelectorAll(element, selector):
+    def readByCSSSelectorAll(self, element, selector, wait=False):
         locator = (By.CSS_SELECTOR, selector)
-        wait = WebDriverWait(element, 10).until(
-            EC.presence_of_element_located(locator)
-        )
+        if wait:
+            w = WebDriverWait(element, 10).until(
+                EC.presence_of_element_located(locator)
+            )
         return element.find_elements(*locator)
-    def readByCSSSelectorAll(element, selector):
+    def readByCSSSelector(self, element, selector, wait=False):
         locator = (By.CSS_SELECTOR, selector)
-        wait = WebDriverWait(element, 10).until(
-            EC.presence_of_element_located(locator)
-        )
+        if wait:
+            w = WebDriverWait(element, 10).until(
+                EC.presence_of_element_located(locator)
+            )
+        return element.find_element(*locator)
+    def readByXPATH(self, element, xpath, wait=False):
+        locator = (By.XPATH, xpath)
+        if wait:
+            w = WebDriverWait(element, 10).until(
+                EC.presence_of_element_located(locator)
+            )
         return element.find_element(*locator)

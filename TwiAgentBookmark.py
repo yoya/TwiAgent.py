@@ -16,31 +16,26 @@ class TwiAgentBookmark(TwiAgent):
         self.openBrowser(url, cookieFile)
     # ブックマーク一覧を取得する
     def readBookmarkArticleList(self):
-        locator = (By.CSS_SELECTOR, 'article')
-        wait = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(locator)
-        )
-        articles = self.driver.find_elements(*locator)
-        return articles
+        return self.readByCSSSelectorAll(self.driver, 'article', wait=True)
     #
     # ブックマーク情報の１つから文字と画像を収集する
     #
     def readBookmarkArticle(self, article):
-        user = article.find_element(By.CSS_SELECTOR, 'div[data-testid="User-Names"]')
-        a = user.find_element(By.CSS_SELECTOR, 'a[href*="/status/"]')
+        user = self.readByCSSSelector(article, 'div[data-testid="User-Names"]')
+        a = self.readByCSSSelector(article, 'a[href*="/status/"]')
         href = a.get_attribute("href")
         try:
-            textElem = article.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetText"]')
+            textElem = self.readByCSSSelector(article, 'div[data-testid="tweetText"]')
             text = textElem.text
         except NoSuchElementException:
             text = ""
         imgsrcs = []
         try:
-            photos = article.find_elements(By.CSS_SELECTOR, 'div[data-testid="tweetPhoto"]')
+            photos = self.readByCSSSelectorAll(article, 'div[data-testid="tweetPhoto"]')
         except NoSuchElementException:
             photos = []
         for photo in photos:
-            imgs = photo.find_elements(By.CSS_SELECTOR, 'img')
+            imgs = self.readByCSSSelectorAll(photo, 'img')
             for img in imgs:
                 src = img.get_attribute("src")
                 imgsrcs.append(src)
