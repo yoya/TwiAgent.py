@@ -53,7 +53,7 @@ def main(agent):
             checkedNew = not checked  # OK にも NG にも存在しない時は逆にする
         if exist_okng:  # OK/NG が存在する場合は Twitter 設定に反映する
             if xor(checked, checkedNew) == True:
-                print("text:{} checked:{} checkedNew:{}".format(text, checked, checkedNew))
+                print("text:{} checked:{} => {}".format(text, checked, checkedNew))
                 agent.toggleSettingsInterest(interest)
             if checkedNew:
                 oknewf.write(text)
@@ -68,6 +68,11 @@ def main(agent):
             else:
                 ngf.write(text)
                 ngf.write("\n")
+    if exist_okng:
+        os.remove(OK_FILE)  ## Windows は move の前に消さないと駄目
+        os.remove(NG_FILE)
+        shutil.move(OK_FILE_NEW, OK_FILE)
+        shutil.move(NG_FILE_NEW, NG_FILE)
     return True
 
 agent = TwiAgentInterests()
