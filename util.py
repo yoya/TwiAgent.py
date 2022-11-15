@@ -17,3 +17,6 @@ def imgcat(filename, height):
 # import os, sys
 #if os.environ["TERM_PROGRAM"] == "iTerm.app":
 #    imgcat(sys.argv[1], 7)
+
+def htmldump(element):
+    print(element.get_attribute('outerHTML'))
