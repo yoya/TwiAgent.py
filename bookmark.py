@@ -63,7 +63,7 @@ while (retry < 3):  # 仏の顔も三度まで
             time.sleep(5)
     except (agent.RetryException) as e:
         agent.refresh()
-        time.sleep(10)
+        time.sleep(5)
         retry = retry + 1  # soft error
         continue
     except (agent.FinishExceptions) as e:
@@ -74,6 +74,7 @@ while (retry < 3):  # 仏の顔も三度まで
     except Exception as e:
         print(sys.exception_info())
         print(e, file=sys.stderr)
+        time.sleep(10)
         break
     except (agent.AbortExceptions) as e:
         print(sys.exception_info())
