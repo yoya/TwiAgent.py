@@ -40,7 +40,7 @@ Twitter Agent powered by Python Selenium
       - cookie export (タブの右から３番目) をクリックします。
    - cookie.json を作って clipboard 内のテキストを保存します。
 
-# Book Download
+# Bookmark Image Download
 
 ```
 % python bookmark.py cookie.json
@@ -61,3 +61,25 @@ Twitter Agent powered by Python Selenium
 ```
 
 - media/*.(jpg|png)
+
+# Setting Interests
+
+```
+% python interests.py cookie.json
+```
+
+## output
+
+- interestsOK.txt
+- interestsNG.txt
+
+ファイルからキーワードを削除してから、
+
+```
+% python interests.py cookie.json
+```
+
+これを実行すると、キーワードに対応するチェックが反転する。
+
+interestsOK.txt から消せば check が外れる
+interestsNG.txt から消せば check がつく
