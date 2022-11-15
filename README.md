@@ -64,14 +64,22 @@ Twitter Agent powered by Python Selenium
 
 # Setting Interests
 
+興味(Interests) の設定をテキスト編集で変更できます。
+まずは以下のコマンドを実行します。
+
 ```
 % python interests.py cookie.json
 ```
+## input
+
+- cookie.json
 
 ## output
 
 - interestsOK.txt
 - interestsNG.txt
+
+##
 
 ファイルからキーワードを削除してから、
 
@@ -81,5 +89,9 @@ Twitter Agent powered by Python Selenium
 
 これを実行すると、キーワードに対応するチェックが反転する。
 
-interestsOK.txt から消せば check が外れる
-interestsNG.txt から消せば check がつく
+- interestsOK.txt から消せば check が外れる
+- interestsNG.txt から消せば check がつく
+
+interestsOK.txt を空ファイルにすれば、全ての check が外れます
+その状態から、interestsNG.txt から興味のあるキーワードを消して
+check をつけると良いでしょう。
