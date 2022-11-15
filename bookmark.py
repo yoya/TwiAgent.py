@@ -5,6 +5,7 @@ import json
 from urllib import parse
 import shutil
 from TwiAgentBookmark import TwiAgentBookmark
+from util import imgcat
 
 prog, cookieFile = sys.argv;
 
@@ -39,8 +40,11 @@ def main(agent, retry):
         for src in imgsrcs:
             imgurl, imgfile = url_to_origurl_filename(src)
             img = agent.downloadPhotoImage(imgurl)
-            with open("media/{}".format(imgfile),'wb') as f:
+            imgfile = "media/{}".format(imgfile)
+            with open(imgfile, 'wb') as f:
                 shutil.copyfileobj(img, f)
+                if os.environ["TERM_PROGRAM"] == "iTerm.app":
+                    imgcat(imgfile, 8)
             agent.removeBookmarkArticle(article)
             time.sleep(3)
     return True
