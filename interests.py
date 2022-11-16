@@ -25,23 +25,30 @@ exist_okng = exist_ok
 os.makedirs("media", exist_ok=True)
 
 okngTable = {}
+lineCount = 0
 if exist_okng:
     okf = open(OK_FILE, 'r')
     ngf = open(NG_FILE, 'r')
     for text in okf.read().split('\n'):
-        okngTable[text] = True
+        if text != "":
+            okngTable[text] = True
+            lineCount += 1
     for text in ngf.read().split('\n'):
-        okngTable[text] = False
+        if text != "":
+            okngTable[text] = False
+            lineCount += 1
     oknewf = open(OK_FILE_NEW, 'w')
     ngnewf = open(NG_FILE_NEW, 'w')
 else:
     okf = open(OK_FILE, 'w')
     ngf = open(NG_FILE, 'w')
 
+print("previous interests count:{}".format(lineCount))
+
 def main(agent):
     interests = agent.readSettingsInterestList()
     interestsLen = len(interests)
-    print(" interests count:{}".format(interestsLen))
+    print("interests count:{}".format(interestsLen))
     if ( interestsLen < 1):
         return False  # soft error
     for interest in interests:
