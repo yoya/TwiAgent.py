@@ -79,7 +79,7 @@ Twitter Agent powered by Python Selenium
 - interestsOK.txt
 - interestsNG.txt
 
-##
+## setting process
 
 ファイルからキーワードを削除してから、
 
