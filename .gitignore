@@ -11,3 +11,14 @@ __pycache__/
 
 # JSON file (twitter cookie)
 cookie.json
+
+# TwiAgent file
+
+media/
+tweet.txt
+
+interestsOK.txt
+interestsNG.txt
+interestsOK.new
+interestsNG.new
+
