@@ -1,5 +1,6 @@
 import base64
 
+# https://iterm2.com/documentation-one-page.html#documentation-images.html
 # ESC]1337;File=name={};size={};inline=1;height={}:   .. ^G\n
 # ESC = 0x1B = 033
 # ^G  = 0x07 = 007
