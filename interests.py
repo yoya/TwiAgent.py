@@ -60,7 +60,7 @@ def main(agent):
             checkedNew = not checked  # OK にも NG にも存在しない時は逆にする
         if exist_okng:  # OK/NG が存在する場合は Twitter 設定に反映する
             if xor(checked, checkedNew) == True:
-                print("text:{} checked:{} => {}".format(text, checked, checkedNew))
+                print("{}:{} => {}".format(text, checked, checkedNew))
                 agent.toggleSettingsInterest(interest)
             if checkedNew:
                 oknewf.write(text)
