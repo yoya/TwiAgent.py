@@ -43,6 +43,7 @@ def main(agent, retry):
             imgfile = "media/{}".format(imgfile)
             with open(imgfile, 'wb') as f:
                 shutil.copyfileobj(img, f)
+                print(imgurl)
                 if os.environ["TERM_PROGRAM"] == "iTerm.app":
                     imgcat(imgfile, 8)
             agent.removeBookmarkArticle(article)
@@ -67,16 +68,18 @@ while (retry < 3):  # 仏の顔も三度まで
         retry = retry + 1  # soft error
         continue
     except (agent.FinishExceptions) as e:
-        print(sys.exception_info())
-        print(e, file=sys.stderr)
+#        print(sys.exception_info())
+#        print(e, file=sys.stderr)
         print("OK")
         break
     except Exception as e:
         print(sys.exception_info())
         print(e, file=sys.stderr)
+        print("Retry")
         time.sleep(10)
         break
     except (agent.AbortExceptions) as e:
         print(sys.exception_info())
         print(e, file=sys.stderr)
+        print("Abort")
         break
