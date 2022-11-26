@@ -9,8 +9,6 @@ from util import imgcat
 
 prog, cookieFile = sys.argv;
 
-BOOKMARK_URL = "https://twitter.com/i/bookmarks"
-
 def url_to_origurl_filename(src):
     up = parse.urlparse(src)
     qs = parse.parse_qs(up.query)
