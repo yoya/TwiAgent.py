@@ -1,4 +1,4 @@
-# (c) 2022/05/22 yoya@awn.jp
+# (c) 2022/11/13 yoya@awn.jp
 
 import os, sys, time
 import json
