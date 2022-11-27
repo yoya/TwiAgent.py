@@ -1,13 +1,5 @@
-# find_elements
-from selenium.webdriver.common.by import By
-# wait for page load
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
-from selenium.common.exceptions import NoSuchWindowException, TimeoutException
-
 from TwiAgent import TwiAgent
+from selenium.common.exceptions import NoSuchElementException
 
 class TwiAgentBookmark(TwiAgent):
     BOOKMARK_URL = "https://twitter.com/i/bookmarks"
@@ -44,18 +36,11 @@ class TwiAgentBookmark(TwiAgent):
     # 共有メニューのブックマーク削除メニューを選択する
     #
     def removeBookmarkArticle(self, article):
-        locator = (By.CSS_SELECTOR, 'div[aria-label="Share Tweet"]')
-        menu = article.find_element(*locator)
-        self.driver.execute_script('arguments[0].click();', menu)
-        locator = (By.XPATH, '//span[contains(text(),"Remove Tweet from Bookmarks")]')
-        wait = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(locator)
-        )
-        remove = menu.find_element(*locator)
-        self.driver.execute_script('arguments[0].click();', remove)
+        menu = self.readByCSSSelector(article, 'div[aria-label="Share Tweet"]')
+        self.click(menu)
+        xpath = '//span[contains(text(),"Remove Tweet from Bookmarks")]'
+        remove = self.readByXPATH(menu, xpath, wait=True)
+        self.click(remove)
     def loadArticle(self):
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight+1)")
-        locator = (By.CSS_SELECTOR, 'article')
-        wait = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(locator)
-        )
+        self.scrollToBottom()
+        self.waitCSSSelector('article')

@@ -43,6 +43,8 @@ class TwiAgent:
         self.driver.refresh()
     def click(self, element):
         self.driver.execute_script('arguments[0].click();', element)
+    def scrollToBottom(self):
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight+1)")
     #
     # 画像のダウンロードストリームを取得する
     #
@@ -73,3 +75,11 @@ class TwiAgent:
                 EC.presence_of_element_located(locator)
             )
         return element.find_element(*locator)
+    def wait(locator):
+        return WebDriverWait(element, 10).until(
+            EC.presence_of_element_located(locator)
+        )
+    def waitPCSSSelector(selector):
+        return self.wait((By.CSS_SELECTOR, selector))
+    def waitPATH(xpath):
+        return self.wait((By.XPATH, xpath))

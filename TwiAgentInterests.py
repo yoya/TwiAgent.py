@@ -10,7 +10,6 @@ class TwiAgentInterests(TwiAgent):
         url = self.INTERESTS_URL
         self.openBrowser(url, cookieFile)
     def readSettingsInterestList(self):
-#        detail = self.readByCSSSelectorAll(self.driver, 'section[aria-label="Section details"', wait = True)
         checkboxes = self.readByCSSSelectorAll(self.driver, 'input[type="checkbox"]', wait = True)
         interests = []
         for cb in checkboxes:
@@ -18,7 +17,6 @@ class TwiAgentInterests(TwiAgent):
             interests.append(elem)
         return interests
     def readSettingsInterest(self, interest):
-#        htmldump(interest)
         text = interest.text
         checkbox = self.readByCSSSelector(interest, 'input[type="checkbox"]')
         if checkbox.get_attribute("checked") == "true":
