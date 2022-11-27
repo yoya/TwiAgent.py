@@ -30,10 +30,11 @@ class TwiAgent:
             prefs = {"intl.accept_languages": "en-us"}  # 英語言語設定
             options.add_experimental_option("prefs",prefs)
             self.driver = webdriver.Chrome(options=options)
-            self.driver.get(url)
+            self.driver.get(url)  # 初来訪サイトだと cookie をセット出来ない
             for cookie in cookies:
                 tmp = {"name": cookie["name"], "value": cookie["value"]}
                 self.driver.add_cookie(tmp)
+            self.driver.get(url)  # cookie セットした状態でアクセスし直し
         except json.decoder.JSONDecodeError as e:
             mesg = "Invalid Cookie JSON file({}) => {}".format(cookieFile, e)
             raise Exception(mesg)
