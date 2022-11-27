@@ -1,5 +1,4 @@
 from TwiAgent import TwiAgent
-from util import htmldump
 
 class TwiAgentInterests(TwiAgent):
     INTERESTS_URL = "https://twitter.com/settings/your_twitter_data/twitter_interests"
