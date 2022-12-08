@@ -44,8 +44,8 @@ def main(agent, retry):
                 print(imgurl)
                 if os.environ["TERM_PROGRAM"] == "iTerm.app":
                     imgcat(imgfile, 8)
-            agent.removeBookmarkArticle(article)
             time.sleep(3)
+        agent.removeBookmarkArticle(article)
     return True
 
 agent = TwiAgentBookmark()
