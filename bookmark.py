@@ -31,7 +31,7 @@ def main(agent, retry):
         return False  # soft error
     for article in articles:
         url, text, imgsrcs = agent.readBookmarkArticle(article)
-        print(url, imgsrcs)
+        print(url, "imgsrcs len:{}".format(len(imgsrcs)))
         logf.write("========\n{}\n{}\n{}\n\n".format(url, text, imgsrcs))
         imgsrcsLen = len(imgsrcs)
 #        print("    imgsrcs count:{}".format(imgsrcsLen))
