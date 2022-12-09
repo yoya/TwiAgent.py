@@ -43,6 +43,8 @@ class TwiAgent:
         self.driver.refresh()
     def click(self, element):
         self.driver.execute_script('arguments[0].click();', element)
+    def scrollTo(self, offset):
+        self.driver.execute_script("window.scrollTo(0, {})".format(offset))
     def scrollToBottom(self):
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight+1)")
     #
@@ -68,6 +70,13 @@ class TwiAgent:
                 EC.presence_of_element_located(locator)
             )
         return element.find_element(*locator)
+    def readByXPATHAll(self, element, xpath, wait=False):
+        locator = (By.XPATH, xpath)
+        if wait:
+            w = WebDriverWait(element, 10).until(
+                EC.presence_of_element_located(locator)
+            )
+        return element.find_elements(*locator)
     def readByXPATH(self, element, xpath, wait=False):
         locator = (By.XPATH, xpath)
         if wait:
