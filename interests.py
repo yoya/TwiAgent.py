@@ -57,8 +57,9 @@ def main(agent):
         checked = info["checked"]
         checkedNew = okngTable.get(text)
         if checkedNew is None:
-            checkedNew = not checked  # OK にも NG にも存在しない時は逆にする
-        if exist_okng:  # OK/NG が存在する場合は Twitter 設定に反映する
+            checkedNew = checked  # 既存の OKNG に存在しない時は設定のまま
+            print("new: {}: {}".format(text ,checked))
+        if exist_okng:  # OK/NG ファイルが有る場合は Twitter 設定に反映する
             if xor(checked, checkedNew) == True:
                 print("{}:{} => {}".format(text, checked, checkedNew))
                 agent.toggleSettingsInterest(interest)
