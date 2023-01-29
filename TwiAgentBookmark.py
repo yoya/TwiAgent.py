@@ -3,9 +3,9 @@ from selenium.common.exceptions import NoSuchElementException
 
 class TwiAgentBookmark(TwiAgent):
     BOOKMARK_URL = "https://twitter.com/i/bookmarks"
-    def openBookmark(self, cookieFile):
+    def openBookmark(self, profileName):
         url = self.BOOKMARK_URL
-        self.openBrowser(url, cookieFile)
+        self.openBrowser(url, profileName)
     # ブックマーク一覧を取得する
     def readBookmarkArticleList(self):
         return self.readByCSSSelectorAll(self.driver, 'article', wait=True)

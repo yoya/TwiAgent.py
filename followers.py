@@ -3,14 +3,13 @@
 import os, sys, time
 from TwiAgentFollowers import TwiAgentFollowers
 
-prog, cookieFile = sys.argv;
+prog, profileName = sys.argv;
 
 def main(agent):
     followers = agent.readFollowers()
     print(followers)
     
 agent = TwiAgentFollowers()
-agent.openFollowers(cookieFile)
+agent.openFollowers(profileName)
 main(agent)
-
 

@@ -29,26 +29,31 @@ Twitter Agent powered by Python Selenium
 % pip install -r requirements.txt
 ```
 
-## cookie.json
+## login.py
 
-- EditThisCookie
-  - https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg/
 
-- usage
-   - Chrome で twitter.com を開いて対象ユーザでログインします
-   - Chrome 拡張の EditThisCookie を開きます
-      - cookie export (タブの右から３番目) をクリックします。
-   - cookie.json を作って clipboard 内のテキストを保存します。
+```
+% python login.py <profile_name>
+```
+
+<profile_name> はログイン状態を記憶する場所です。
+任意の文字列を使えますが、ログイン名にすると良いでしょう。
+
+自分は以下のようにしてます。
+
+```
+% python login.py yoya
+```
 
 # Bookmark Image Download
 
 ```
-% python bookmark.py cookie.json
+% python bookmark.py <profile_name>
 ```
 
 ## input
 
-- cookie.json
+- <profile_name>
 
 ## output
 
@@ -68,11 +73,11 @@ Twitter Agent powered by Python Selenium
 まずは以下のコマンドを実行します。
 
 ```
-% python interests.py cookie.json
+% python interests.py <profile_name>
 ```
 ## input
 
-- cookie.json
+- <profile_name>
 
 ## output
 
@@ -84,7 +89,7 @@ Twitter Agent powered by Python Selenium
 ファイルからキーワードを削除してから、
 
 ```
-% python interests.py cookie.json
+% python interests.py <profile_name>
 ```
 
 これを実行すると、キーワードに対応するチェックが反転する。

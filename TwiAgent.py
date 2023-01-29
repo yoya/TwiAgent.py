@@ -21,23 +21,14 @@ class TwiAgent:
     def __init__(self):
         pass
     # ブラウザを開く
-    def openBrowser(self, url, cookieFile):
-        json_open = open(cookieFile, 'r')
-        try:
-            cookies = json.load(json_open)
-            options = Options()
-            #options.add_argument('--headless')
-            prefs = {"intl.accept_languages": "en-us"}  # 英語言語設定
-            options.add_experimental_option("prefs",prefs)
-            self.driver = webdriver.Chrome(options=options)
-            self.driver.get(url)  # 初来訪サイトだと cookie をセット出来ない
-            for cookie in cookies:
-                tmp = {"name": cookie["name"], "value": cookie["value"]}
-                self.driver.add_cookie(tmp)
-            self.driver.get(url)  # cookie セットした状態でアクセスし直し
-        except json.decoder.JSONDecodeError as e:
-            mesg = "Invalid Cookie JSON file({}) => {}".format(cookieFile, e)
-            raise Exception(mesg)
+    def openBrowser(self, url, profileName):
+        options = Options()
+        #options.add_argument('--headless')
+        options.add_argument('--user-data-dir={}'.format(profileName))
+        prefs = {"intl.accept_languages": "en-us"}  # 英語言語設定
+        options.add_experimental_option("prefs",prefs)
+        self.driver = webdriver.Chrome(options=options)
+        self.driver.get(url)
     # 画面リフレッシュ
     def refresh(self):
         self.driver.refresh()
@@ -84,11 +75,13 @@ class TwiAgent:
                 EC.presence_of_element_located(locator)
             )
         return element.find_element(*locator)
-    def wait(locator):
-        return WebDriverWait(element, 10).until(
+    def wait(self, element, locator, timeout = None):
+        if timeout is None:
+            timeout = 10  # default timeout
+        return WebDriverWait(element, timeout).until(
             EC.presence_of_element_located(locator)
         )
-    def waitPCSSSelector(selector):
-        return self.wait((By.CSS_SELECTOR, selector))
-    def waitPATH(xpath):
-        return self.wait((By.XPATH, xpath))
+    def waitCSSSelector(self, element, selector, timeout = None):
+        return self.wait(element,(By.CSS_SELECTOR, selector), timeout)
+    def waitPATH(self, element, xpath, timeout = None):
+        return self.wait(self, element, (By.XPATH, xpath), timeout)

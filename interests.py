@@ -5,7 +5,7 @@ from operator import xor
 from TwiAgentInterests import TwiAgentInterests
 import shutil
 
-prog, cookieFile = sys.argv;
+prog, profileName = sys.argv;
 
 INTERESTS_URL = "https://twitter.com/settings/your_twitter_data/twitter_interests"
 
@@ -84,6 +84,6 @@ def main(agent):
     return True
 
 agent = TwiAgentInterests()
-agent.openInterests(cookieFile)
+agent.openInterests(profileName)
 
 main(agent)

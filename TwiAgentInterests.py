@@ -5,9 +5,9 @@ class TwiAgentInterests(TwiAgent):
     def __init__(self):
         pass
         # ブックマークを開く
-    def openInterests(self, cookieFile):
+    def openInterests(self, profileName):
         url = self.INTERESTS_URL
-        self.openBrowser(url, cookieFile)
+        self.openBrowser(url, profileName)
     def readSettingsInterestList(self):
         checkboxes = self.readByCSSSelectorAll(self.driver, 'input[type="checkbox"]', wait = True)
         interests = []

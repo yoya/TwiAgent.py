@@ -4,9 +4,9 @@ from selenium.common.exceptions import StaleElementReferenceException
 
 class TwiAgentFollowers(TwiAgent):
     FOLLOWERS_URL = "https://twitter.com/followers"
-    def openFollowers(self, cookieFile):
+    def openFollowers(self, profileName):
         url = self.FOLLOWERS_URL
-        self.openBrowser(url, cookieFile)
+        self.openBrowser(url, profileName)
     def readFollowers(self):
 #        followers = self.readByCSSSelectorAll(self.driver, 'div[data-testid="cellInnerDiv"]', wait=True)
         followersUsername = []

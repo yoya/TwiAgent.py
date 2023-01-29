@@ -7,7 +7,7 @@ import shutil
 from TwiAgentBookmark import TwiAgentBookmark
 from util import imgcat
 
-prog, cookieFile = sys.argv;
+prog, profileName = sys.argv;
 
 def url_to_origurl_filename(src):
     up = parse.urlparse(src)
@@ -49,7 +49,7 @@ def main(agent, retry):
     return True
 
 agent = TwiAgentBookmark()
-agent.openBookmark(cookieFile)
+agent.openBookmark(profileName)
 
 retry = 0
 while (retry < 3):  # 仏の顔も三度まで
