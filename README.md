@@ -5,10 +5,11 @@ Twitter Agent powered by Python Selenium
 - Bookmark Download
 - Setting Interests
 
+今のところブックマークの画像をダウンロードする機能が便利だと思います。
+
 # require
 
 - Apple macOS Monterey 以降
-
 - Google Chrome 最近のバージョン
 
 - Python 3.10.8
@@ -31,13 +32,15 @@ Twitter Agent powered by Python Selenium
 
 ## login.py
 
+以下のコマンドで起動するブラウザ上で、Twitter にログインして下さい。
+ウィンドウをその後で閉じて大丈夫です。
 
 ```
 % python login.py <profile_name>
 ```
 
 <profile_name> はログイン状態を記憶する場所で任意の文字列を使えます。
-何か拘りが無ければとりあえず、ログイン名にすると良いでしょう。
+拘りが無ければ、ログイン名にすると良いでしょう。
 
 自分は以下のようにしてます。
 
@@ -45,22 +48,25 @@ Twitter Agent powered by Python Selenium
 % python login.py yoya
 ```
 
-以前、どのプロファイル名を使ったか思い出せない時は、引数無しで実行するとプロファイル名を表示します。
+引数無しの実行で、今までに指定した Profile 名を表示出来ます。
+Profile名を思い出せない時にお使い下さい。
 
 ```
 % python login.py
 yoya
 ```
 
-
-
 # Bookmark Image Download
+
+ブックマーク画像を D/L する機能です。
 
 ```
 % python bookmark.py <profile_name>
 ```
 
 ## input
+
+ログイン済みの Profile名が必要です。
 
 - <profile_name>
 
@@ -85,6 +91,8 @@ yoya
 % python interests.py <profile_name>
 ```
 ## input
+
+ログイン済みの Profile名が必要です。
 
 - <profile_name>
 
