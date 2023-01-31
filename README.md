@@ -36,14 +36,23 @@ Twitter Agent powered by Python Selenium
 % python login.py <profile_name>
 ```
 
-<profile_name> はログイン状態を記憶する場所です。
-任意の文字列を使えますが、ログイン名にすると良いでしょう。
+<profile_name> はログイン状態を記憶する場所で任意の文字列を使えます。
+何か拘りが無ければとりあえず、ログイン名にすると良いでしょう。
 
 自分は以下のようにしてます。
 
 ```
 % python login.py yoya
 ```
+
+以前、どのプロファイル名を使ったか思い出せない時は、引数無しで実行するとプロファイル名を表示します。
+
+```
+% python login.py
+yoya
+```
+
+
 
 # Bookmark Image Download
 
