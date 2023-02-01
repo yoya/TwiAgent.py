@@ -99,22 +99,25 @@ yoya
 
 ## output
 
+「興味」設定のキーワードにチェックが入っているものを OK、外れているものを NG に入れます。(NG にした項目はすぐ消えるので、ひとつも無い事が多いです)
+
 - interestsOK.txt
 - interestsNG.txt
 
-## setting process
+## 2回目以降
 
-ファイルからキーワードを削除してから、
+interestsOK.txt、interestsNG.txt の中に並ぶ文字列の外したいキーワードの頭に空白を追加して、以下のコマンドを実行して下さい。
 
 ```
 % python interests.py <profile_name>
 ```
 
-これを実行すると、キーワードに対応するチェックが反転する。
+interestsOK.txt
+- 設定に check がある場合は維持、外れている場合は check を入れます
+- 内で頭に空白のあるキーワードは check を外し interestsNG.txt にキーワードを移します
+- 設定にキーワードがない場合は何もしません
 
-- interestsOK.txt から消せば check が外れる
-- interestsNG.txt から消せば check がつく
-
-interestsOK.txt を空ファイルにすれば、全ての check が外れます
-その状態から、interestsNG.txt から興味のあるキーワードを消して
-check をつけると良いでしょう。
+interestsNG.txt
+- 設定に check がある場合は外し、外れている場合は維持します。
+- 内で頭に空白のあるキーワードは check を入れ interestsOK.txt にキーワードを移します
+- 設定にキーワードがない場合は何もしません

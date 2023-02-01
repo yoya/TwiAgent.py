@@ -31,11 +31,19 @@ if exist_okng:
     ngf = open(NG_FILE, 'r')
     for text in okf.read().split('\n'):
         if text != "":
-            okngTable[text] = True
+            if text[0] != " ":
+                okngTable[text] = True
+            else:
+                text = text.strip()
+                okngTable[text] = False
             lineCount += 1
     for text in ngf.read().split('\n'):
         if text != "":
-            okngTable[text] = False
+            if text[0] != " ":
+                okngTable[text] = False
+            else:
+                text = text.strip()
+                okngTable[text] = True
             lineCount += 1
     oknewf = open(OK_FILE_NEW, 'w')
     ngnewf = open(NG_FILE_NEW, 'w')
