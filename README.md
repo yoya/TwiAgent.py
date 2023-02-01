@@ -5,6 +5,7 @@ Twitter Agent powered by Python Selenium
 - Bookmark Download
 - Setting Interests
 
+Twitter API を使わず Chrome を Selenium で操作して自動化するツールです。
 今のところブックマークの画像をダウンロードする機能が便利だと思います。
 
 # require
