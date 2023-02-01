@@ -9,9 +9,6 @@ __pycache__/
 # pyenv
 .python-version
 
-# JSON file (twitter cookie)
-cookie.json
-
 # TwiAgent file
 
 media/
@@ -21,4 +18,3 @@ interestsOK.txt
 interestsNG.txt
 interestsOK.new
 interestsNG.new
-
