@@ -13,7 +13,8 @@ class TwiAgentBookmark(TwiAgent):
     # ブックマーク情報の１つから文字と画像を収集する
     #
     def readBookmarkArticle(self, article):
-        user = self.readByCSSSelector(article, 'div[data-testid="User-Names"]')
+#        user = self.readByCSSSelector(article, 'div[data-testid="User-Names"]')
+        user = self.readByCSSSelector(article, 'div[data-testid="User-Name"]')
         a = self.readByCSSSelector(article, 'a[href*="/status/"]')
         href = a.get_attribute("href")
         try:
