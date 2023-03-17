@@ -99,25 +99,26 @@ yoya
 
 ## output
 
-「興味」設定のキーワードにチェックが入っているものを OK、外れているものを NG に入れます。(NG にした項目はすぐ消えるので、ひとつも無い事が多いです)
+「興味」設定のキーワードにチェックが入っているものを OK、外れているものを NG に入れます。(NG にした項目はすぐ消えるので、NG ファイルが空の事が結構あります)
 
 - interestsOK.txt
 - interestsNG.txt
 
 ## 2回目以降
 
-interestsOK.txt、interestsNG.txt の中に並ぶ文字列の外したいキーワードの頭に空白を追加して、以下のコマンドを実行して下さい。
+interestsOK.txt、interestsNG.txt の中に並ぶ文字列の  OK/NG を入れ替えたいキーワードの頭に空白を追加して、以下のコマンドを実行して下さい。
+interestsOK.txt で新規に追加されたキーワードは "+ " が頭につくので、OK に残したい場合は "+ " を削除。NG に移したい倍は "+" だけ消して空白を頭に残して下さい。
+
+例えば、interestsOK.txt に以下の２つが追加された場合。
 
 ```
-% python interests.py <profile_name>
++ tameninarukoto
++ kudaranaikoto
 ```
 
-interestsOK.txt
-- 設定に check がある場合は維持、外れている場合は check を入れます
-- 内で頭に空白のあるキーワードは check を外し interestsNG.txt にキーワードを移します
-- 設定にキーワードがない場合は何もしません
+以下のように編集して、再び interests.py コマンドを叩く事で、１つ目を残し、2つ目を NG ファイルに移動させて、それをツイッターの設定に反省させる事もできます。
 
-interestsNG.txt
-- 設定に check がある場合は外し、外れている場合は維持します。
-- 内で頭に空白のあるキーワードは check を入れ interestsOK.txt にキーワードを移します
-- 設定にキーワードがない場合は何もしません
+```
+tameninarukoto
+ kudaranaikoto
+```

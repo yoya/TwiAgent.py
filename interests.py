@@ -63,15 +63,23 @@ def main(agent):
         info = agent.readSettingsInterest(interest)
         text = info["text"]
         checked = info["checked"]
+        found = False  # ファイルの OK/NG テーブルにキーワードがあるか否か
         checkedNew = okngTable.get(text)
         if checkedNew is None:
+            checkedNew = okngTable.get("+ {}".format(text))
+        if checkedNew is not None:
+            found = True
+        if not found:
             checkedNew = checked  # 既存の OKNG に存在しない時は設定のまま
             print("new: {}: {}".format(text ,checked))
         if exist_okng:  # OK/NG ファイルが有る場合は Twitter 設定に反映する
             if xor(checked, checkedNew) == True:
                 print("{}:{} => {}".format(text, checked, checkedNew))
                 agent.toggleSettingsInterest(interest)
-            if checkedNew:
+            if not found:
+                oknewf.write("+ {}".format(text))
+                oknewf.write("\n")
+            elif checkedNew:
                 oknewf.write(text)
                 oknewf.write("\n")
             else:
@@ -79,7 +87,7 @@ def main(agent):
                 ngnewf.write("\n")
         else:  # OK/NG が新規ファイルの場合は書き込むだけ
             if checked == True:
-                okf.write(text)
+                okf.write("+ {}".format(text))
                 okf.write("\n")
             else:
                 ngf.write(text)
