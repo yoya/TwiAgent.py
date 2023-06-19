@@ -1,6 +1,7 @@
 from TwiAgent import TwiAgent
 
 class TwiAgentInterests(TwiAgent):
+    # Privary and Safety > Ads preferences > Interests
     INTERESTS_URL = "https://twitter.com/settings/your_twitter_data/twitter_interests"
     def __init__(self):
         pass
