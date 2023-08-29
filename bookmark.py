@@ -5,15 +5,17 @@ import json
 from urllib import parse
 import shutil
 from TwiAgentBookmark import TwiAgentBookmark
-from util import imgcat
+from util import imgcat, youtubeDl
 
 prog, profileName = sys.argv;
 
-def url_to_origurl_filename(src):
+def url_to_origurl_filename(src, fmt = None):
     up = parse.urlparse(src)
     qs = parse.parse_qs(up.query)
-    fmt = qs['format'][0]
-    url = "{}://{}{}?format={}&name=orig".format(up.scheme, up.netloc, up.path, fmt)
+    if fmt is None:
+        fmt = qs['format'][0]
+#    url = "{}://{}{}?format={}&name=orig".format(up.scheme, up.netloc, up.path, fmt)
+    url = "{}://{}{}?format={}&name=4096x4096".format(up.scheme, up.netloc, up.path, fmt)
     filename = "{}.{}".format(up.path.split('/')[-1], fmt);
     return [url, filename]
 
@@ -30,22 +32,42 @@ def main(agent, retry):
         agent.loadArticle()
         return False  # soft error
     for article in articles:
-        url, text, imgsrcs = agent.readBookmarkArticle(article)
+        url, text, imgsrcs, video = agent.readBookmarkArticle(article)
         print(url, "imgsrcs len:{}".format(len(imgsrcs)))
         logf.write("========\n{}\n{}\n{}\n\n".format(url, text, imgsrcs))
         imgsrcsLen = len(imgsrcs)
 #        print("    imgsrcs count:{}".format(imgsrcsLen))
+        found = False
         for src in imgsrcs:
-            imgurl, imgfile = url_to_origurl_filename(src)
-            img = agent.downloadPhotoImage(imgurl)
-            imgfile = "media/{}".format(imgfile)
+            dlDone = False;  # download したフラグ
+            for f in ["png", "jpg", "webp", None]:
+                imgurl, imgfile = url_to_origurl_filename(src, f)
+                imgfile = "media/{}".format(imgfile)
+                if os.path.isfile(imgfile):
+                    print("found")
+                    dlDone = False;  # 手元にファイルがあるので DL しない
+                    break
+                try:
+                    img = agent.downloadPhotoImage(imgurl)
+                    dlDone = True
+                    break
+                except Exception as e:
+                    dlDone = False;  # D/L 失敗
+            if dlDone is False:
+                continue
             with open(imgfile, 'wb') as f:
                 shutil.copyfileobj(img, f)
                 print(imgurl)
                 if os.environ["TERM_PROGRAM"] == "iTerm.app":
                     imgcat(imgfile, 8)
-            time.sleep(3)
-        agent.removeBookmarkArticle(article)
+                    time.sleep(2)
+                    if video:
+                        videoId = url.split("/")[-1]
+                        print("url, videoId:", url, videoId)
+                        youtubeDl(url, "media/{}.mp4".format(videoId))
+        if found == False or True:
+            agent.removeBookmarkArticle(article)
+            time.sleep(2)
     return True
 
 agent = TwiAgentBookmark()
