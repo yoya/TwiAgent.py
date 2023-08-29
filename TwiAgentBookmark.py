@@ -32,7 +32,12 @@ class TwiAgentBookmark(TwiAgent):
             for img in imgs:
                 src = img.get_attribute("src")
                 imgsrcs.append(src)
-        return href, text, imgsrcs
+        try:
+            self.readByCSSSelector(article, 'div[aria-label="Embedded video"]')
+            video = True
+        except NoSuchElementException:
+            video = False
+        return href, text, imgsrcs, video
     #
     # 共有メニューのブックマーク削除メニューを選択する
     #
