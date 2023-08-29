@@ -93,11 +93,13 @@ while (retry < 3):  # 仏の顔も三度まで
         print("OK")
         break
     except Exception as e:
-        print(sys.exception_info())
+#        print(sys.exception_info())
         print(e, file=sys.stderr)
         print("Retry")
+        agent.refresh()
+        retry = retry + 1  # soft error
         time.sleep(10)
-        break
+        continue
     except (agent.AbortExceptions) as e:
         print(sys.exception_info())
         print(e, file=sys.stderr)
