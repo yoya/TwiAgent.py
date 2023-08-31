@@ -44,7 +44,7 @@ class TwiAgentBookmark(TwiAgent):
     def removeBookmarkArticle(self, article):
         menu = self.readByCSSSelector(article, 'div[aria-label="Share post"]')
         self.click(menu)
-        xpath = '//span[contains(text(),"Remove post from Bookmarks")]'
+        xpath = '//span[contains(text(),"Remove") and contains(text(),"from Bookmarks")]'
         remove = self.readByXPATH(menu, xpath, wait=True)
         self.click(remove)
     def loadArticle(self):
