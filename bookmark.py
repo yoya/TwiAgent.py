@@ -59,7 +59,7 @@ def main(agent, retry):
                 shutil.copyfileobj(img, f)
                 print(imgurl)
                 if os.environ["TERM_PROGRAM"] == "iTerm.app":
-                    imgcat(imgfile, 8)
+                    imgcat(imgfile, 10)
                     time.sleep(2)
                     if video:
                         videoId = url.split("/")[-1]
