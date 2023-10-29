@@ -14,10 +14,10 @@ def url_to_origurl_filename(src, fmt = None):
     qs = parse.parse_qs(up.query)
     if fmt is None:
         fmt = qs['format'][0]
-#    url = "{}://{}{}?format={}&name=orig".format(up.scheme, up.netloc, up.path, fmt)
-    url = "{}://{}{}?format={}&name=4096x4096".format(up.scheme, up.netloc, up.path, fmt)
+    url = "{}://{}{}?format={}&name=orig".format(up.scheme, up.netloc, up.path, fmt)
+    # url = "{}://{}{}?format={}&name=4096x4096".format(up.scheme, up.netloc, up.path, fmt)
     filename = "{}.{}".format(up.path.split('/')[-1], fmt);
-    return [url, filename]
+    return [url, filename, fmt]
 
 # setup
 
@@ -39,33 +39,42 @@ def main(agent, retry):
 #        print("    imgsrcs count:{}".format(imgsrcsLen))
         found = False
         for src in imgsrcs:
-            dlDone = False;  # download したフラグ
-            for f in ["png", "jpg", "webp", None]:
-                imgurl, imgfile = url_to_origurl_filename(src, f)
+            dlDone = False  # download したフラグ
+            isFile = False
+            for f in ["png", "jpg"]:
+                imgurl, imgfile, fmt = url_to_origurl_filename(src, f)
                 imgfile = "media/{}".format(imgfile)
                 if os.path.isfile(imgfile):
-                    print("found")
-                    dlDone = False;  # 手元にファイルがあるので DL しない
+                    isFile = True
                     break
+            if isFile:
+                print("already downloaded: {}".format(imgfile))
+                continue  # already downloaded
+            imgurl, imgfile, fmt = url_to_origurl_filename(src, None)
+            fmtList = [fmt]
+            if fmt == "webp":
+                fmtList = ["png", "jpg"]
+            for f in fmtList:
+                imgurl, imgfile, fmt = url_to_origurl_filename(src, f)
+                imgfile = "media/{}".format(imgfile)
                 try:
                     img = agent.downloadPhotoImage(imgurl)
                     dlDone = True
-                    break
                 except Exception as e:
                     dlDone = False;  # D/L 失敗
-            if dlDone is False:
-                continue
-            with open(imgfile, 'wb') as f:
-                shutil.copyfileobj(img, f)
-                print(imgurl)
-                if os.environ["TERM_PROGRAM"] == "iTerm.app":
-                    imgcat(imgfile, 10)
-                    time.sleep(2)
-                    if video:
-                        videoId = url.split("/")[-1]
-                        print("url, videoId:", url, videoId)
-                        youtubeDl(url, "media/{}.mp4".format(videoId))
-        if found == False or True:
+                if dlDone is False:
+                    print("download failed:{}".format(imgurl))
+                    continue
+                with open(imgfile, 'wb') as f:
+                    shutil.copyfileobj(img, f)
+                    if os.environ["TERM_PROGRAM"] == "iTerm.app":
+                        imgcat(imgfile, 10)
+                        time.sleep(2)
+            if video:
+                videoId = url.split("/")[-1]
+                print("url, videoId:", url, videoId)
+                youtubeDl(url, "media/{}.mp4".format(videoId))
+        if True:  # found is True:
             agent.removeBookmarkArticle(article)
             time.sleep(2)
     return True
