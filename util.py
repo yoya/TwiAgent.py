@@ -1,6 +1,7 @@
 import os, base64, subprocess
 
 YouTubeDL = "youtube-dl"
+ImageMagick = "magick"
 
 # https://iterm2.com/documentation-one-page.html#documentation-images.html
 # ESC]1337;File=name={};size={};inline=1;height={}:   .. ^G\n
@@ -43,3 +44,11 @@ def listProfile():
                 sessionsPath = "{}/Default/Sessions/".format(name);
                 if os.path.isdir(sessionsPath):
                     print(name)
+
+def isEqualImage(imgfile1, imgfile2):
+    try:
+        result = subprocess.run([ImageMagick, "compare", "-h"], capture_output=True)
+    except FileNotFoundError as e:
+        return
+    result = subprocess.run([ImageMagick, "compare", "-metric", "PSNR", imgfile1, imgfile2, "NULL:"], capture_output=True)
+    print(result)
