@@ -42,10 +42,7 @@ class TwiAgentBookmark(TwiAgent):
     # 共有メニューのブックマーク削除メニューを選択する
     #
     def removeBookmarkArticle(self, article):
-        menu = self.readByCSSSelector(article, 'div[aria-label="Share post"]')
-        self.click(menu)
-        xpath = '//span[contains(text(),"Remove") and contains(text(),"from Bookmarks")]'
-        remove = self.readByXPATH(menu, xpath, wait=True)
+        remove = self.readByCSSSelector(article, 'div[data-testid="removeBookmark"]')
         self.click(remove)
     def loadArticle(self):
         self.scrollToBottom()
