@@ -4,10 +4,12 @@ import os, sys, time
 import json
 from urllib import parse
 import shutil
+from TwiAgent import TwiAgent
 from TwiAgentBookmark import TwiAgentBookmark
 from util import imgcat, youtubeDl
 
-prog, profileName = sys.argv;
+prog, profileName = sys.argv[:2];
+listfile = sys.argv[2] if len(sys.argv) > 2 else None
 
 def url_to_origurl_filename(src, fmt = None):
     up = parse.urlparse(src)
@@ -78,6 +80,44 @@ def main(agent, retry):
             agent.removeBookmarkArticle(article)
             time.sleep(2)
     return True
+
+def mainAdd(agent, listfile):
+    with open(listfile, 'r') as f:
+        lines = []
+        for line in f.readlines():
+            lines.append(line.rstrip())
+        f.close()
+        for line in lines:
+            retry = 0
+            while (retry < 3):
+                url = line
+                print(url)
+                try:
+                    agent.driver.get(url)
+                    add = agent.readByCSSSelector(agent.driver, 'div[data-testid="bookmark"]', wait=True)
+                    agent.click(add)
+                    retry = 3
+                    time.sleep(3)
+                except (agent.RetryException) as e:
+                    # ネットワーク不調の時はここ
+                    agent.refresh()
+                    retry = retry + 1
+                    time.sleep(10)
+                except (agent.FinishExceptions) as e:
+                    # 削除されてる時ここにくる
+                    print("FinishExcepton:", e)
+                    retry = 3
+                    time.sleep(10)
+                except Exception as e:
+                    print("Exception:", e)
+                    return
+    return True
+
+if listfile is not None:
+    agent = TwiAgent()
+    agent.openBrowser("https://awm.jp/", profileName)
+    mainAdd(agent, listfile)
+    exit(0)
 
 agent = TwiAgentBookmark()
 agent.openBookmark(profileName)
