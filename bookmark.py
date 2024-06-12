@@ -8,6 +8,9 @@ from TwiAgent import TwiAgent
 from TwiAgentBookmark import TwiAgentBookmark
 from util import imgcat, youtubeDl
 
+mediaDir = "media"
+archiveDir = "/Users/yoya/desktop/pictures/"
+
 prog, profileName = sys.argv[:2];
 listfile = sys.argv[2] if len(sys.argv) > 2 else None
 
@@ -23,7 +26,7 @@ def url_to_origurl_filename(src, fmt = None):
 
 # setup
 
-os.makedirs("media", exist_ok=True)
+os.makedirs(mediaDir, exist_ok=True)
 logf = open("tweet.txt", 'a')
 
 def main(agent, retry):
@@ -35,7 +38,7 @@ def main(agent, retry):
         return False  # soft error
     for article in articles:
         url, text, imgsrcs, video = agent.readBookmarkArticle(article)
-        print(url, "imgsrcs len:{}".format(len(imgsrcs)))
+        print(url, "imgsrcs len:{}, video:{}".format(len(imgsrcs), video))
         logf.write("========\n{}\n{}\n{}\n\n".format(url, text, imgsrcs))
         imgsrcsLen = len(imgsrcs)
 #        print("    imgsrcs count:{}".format(imgsrcsLen))
@@ -45,8 +48,9 @@ def main(agent, retry):
             isFile = False
             for f in ["png", "jpg"]:
                 imgurl, imgfile, fmt = url_to_origurl_filename(src, f)
-                imgfile = "media/{}".format(imgfile)
-                if os.path.isfile(imgfile):
+                imgfile = "{}/{}".format(mediaDir, imgfile)
+                archivefile = "{}/{}".format(archiveDir, imgfile)
+                if os.path.isfile(imgfile) or os.path.isfile(archivefile):
                     isFile = True
                     break
             if isFile:
@@ -58,7 +62,7 @@ def main(agent, retry):
                 fmtList = ["png", "jpg"]
             for f in fmtList:
                 imgurl, imgfile, fmt = url_to_origurl_filename(src, f)
-                imgfile = "media/{}".format(imgfile)
+                imgfile = "{}/{}".format(mediaDir, imgfile)
                 try:
                     img = agent.downloadPhotoImage(imgurl)
                     dlDone = True
@@ -72,10 +76,15 @@ def main(agent, retry):
                     if os.environ["TERM_PROGRAM"] == "iTerm.app":
                         imgcat(imgfile, 10)
                         time.sleep(2)
-            if video:
-                videoId = url.split("/")[-1]
-                print("url, videoId:", url, videoId)
-                youtubeDl(url, "media/{}.mp4".format(videoId))
+        if video:
+            videoId = url.split("/")[-1]
+            print("url, videoId:", url, videoId)
+            videoFile = "{}/{}-%(playlist_index)d.mp4".format(mediaDir, videoId)
+            videoArchive = "{}/{}-1.mp4".format(archiveDir, videoId)
+            if os.path.isfile(videoFile) or os.path.isfile(videoArchive):
+                print("video:{} already downloaded".format(videoId))
+            else:
+                youtubeDl(url, videoFile)
         if True:  # found is True:
             agent.removeBookmarkArticle(article)
             time.sleep(2)
