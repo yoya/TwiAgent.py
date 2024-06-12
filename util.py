@@ -1,6 +1,7 @@
 import os, base64, subprocess
 
-YouTubeDL = "youtube-dl"
+#YouTubeDL = "youtube-dl"
+YouTubeDL = "yt-dlp"
 ImageMagick = "magick"
 
 # https://iterm2.com/documentation-one-page.html#documentation-images.html
@@ -22,12 +23,17 @@ def imgcat(filename, height):
 #if os.environ["TERM_PROGRAM"] == "iTerm.app":
 #    imgcat(sys.argv[1], 7)
 
+ProfileName = "Profile 8"  # XXX
+
 def youtubeDl(url, filename):
+    print("youtubeDl")
     try:
         result = subprocess.run([YouTubeDL, "-help"], capture_output=True)
     except FileNotFoundError as e:
+        print(e)
         return
-    result = subprocess.run([YouTubeDL, url, "-o", filename])
+    result = subprocess.run([YouTubeDL, url, "-o", filename, "--cookies-from-browser", "chrome:{}".format(ProfileName)])
+    print(result)
 
 #url = "https://twitter.com/yoya/status/1636393346452291588"
 #folder = "1636393346452291588.mp4"
