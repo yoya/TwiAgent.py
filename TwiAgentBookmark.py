@@ -42,7 +42,7 @@ class TwiAgentBookmark(TwiAgent):
     # 共有メニューのブックマーク削除メニューを選択する
     #
     def removeBookmarkArticle(self, article):
-        remove = self.readByCSSSelector(article, 'div[data-testid="removeBookmark"]')
+        remove = self.readByCSSSelector(article, 'button[data-testid="removeBookmark"]')
         self.click(remove)
     def loadArticle(self):
         self.scrollToBottom()
